@@ -4,10 +4,8 @@ import re
 
 def strip_comments(text):
     text = re.sub('(^/\*.*?\*/(\n|$))(?m)(?s)', '\n', text)  # multiline comments (/* */)
-    text = re.sub('(^#.*(\n|$))', '\n', text)  # whole line comment (#)
-    text = re.sub('(^//.*(\n|$))', '\n', text)  # whole line comment (//)
-    text = re.sub('(#.*(\n|$))', '\n', text)  # middle of the line comment (#)
-    text = re.sub('(//.*(\n|$))', '\n', text)  # middle of the line comment (//)
+    text = re.sub('(#.*(\n|$))', '\n', text)  # single line comment (#)
+    text = re.sub('(//.*(\n|$))', '\n', text)  # single line comment (//)
     text = re.sub('(/\*.*(\n|$))|(\*/.*(\n|$))', '\n', text)  # dangling multiline comment brackets (/* */)
     #text = re.sub('[\n]{3,}', '\n\n', text)  # remove multiple consecutive newlines
     #text = re.sub('[ ]{2,}', ' ', text)  # remove multiple consecutive spaces
