@@ -3,13 +3,13 @@ import re
 
 
 def strip_comments(text):
-    text = re.sub('(^/\*.*?\*/(\n|$))(?m)(?s)', '\n', text)  # multiline comments (/* */)
-    text = re.sub('(#.*(\n|$))', '\n', text)  # single line comment (#)
-    text = re.sub('(//.*(\n|$))', '\n', text)  # single line comment (//)
-    text = re.sub('(/\*.*(\n|$))|(\*/.*(\n|$))', '\n', text)  # dangling multiline comment brackets (/* */)
-    #text = re.sub('[\n]{3,}', '\n\n', text)  # remove multiple consecutive newlines
-    #text = re.sub('[ ]{2,}', ' ', text)  # remove multiple consecutive spaces
-    #text.rstrip() # finally, strip leading and trailing whitespace
+    text = re.sub(r'(^/\*.*?\*/(\n|$))', '\n', text, flags=re.MULTILINE|re.DOTALL)  # multiline comments (/* */)
+    text = re.sub(r'(#.*(\n|$))', '\n', text)  # single line comment (#)
+    text = re.sub(r'(//.*(\n|$))', '\n', text)  # single line comment (//)
+    text = re.sub(r'(/\*.*(\n|$))|(\*/.*(\n|$))', '\n', text) # dangling multiline comment brackets (/* */)
+    #text = re.sub(r'[\n]{3,}', '\n\n', text)  # remove multiple consecutive newlines
+    #text = re.sub(r'[ ]{2,}', ' ', text)  # remove multiple consecutive spaces
+    #text = text.rstrip() # finally, strip leading and trailing whitespace
 
     return text
 
