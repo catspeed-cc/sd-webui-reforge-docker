@@ -84,6 +84,7 @@ fpte_group.add_argument("--clip-in-fp8-e4m3fn", action="store_true", help="Store
 fpte_group.add_argument("--clip-in-fp8-e5m2", action="store_true", help="Store text encoder weights in fp8 (e5m2 variant).")
 fpte_group.add_argument("--clip-in-fp16", action="store_true", help="Store text encoder weights in fp16.")
 fpte_group.add_argument("--clip-in-fp32", action="store_true", help="Store text encoder weights in fp32.")
+fpte_group.add_argument("--bf16-text-enc", action="store_true", help="Store text encoder weights in bf16.")
 
 parser.add_argument("--disable-ipex-hijack", action="store_true")
 

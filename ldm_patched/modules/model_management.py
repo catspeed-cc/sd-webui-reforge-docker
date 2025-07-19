@@ -893,6 +893,8 @@ def text_encoder_dtype(device=None):
         return torch.float8_e5m2
     elif args.clip_in_fp16:
         return torch.float16
+    elif args.bf16_text_enc:
+        return torch.bfloat16
     elif args.clip_in_fp32:
         return torch.float32
 
