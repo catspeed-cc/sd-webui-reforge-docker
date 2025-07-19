@@ -601,6 +601,20 @@ class SDXL_instructpix2pix(IP2P, SDXL):
         else:
             self.process_ip2p_image_in = lambda image: image #diffusers ip2p
 
+class Lotus(BaseModel):
+    def extra_conds(self, **kwargs):
+        out = {}
+        cross_attn = kwargs.get("cross_attn", None)
+        out['c_crossattn'] = ldm_patched.modules.conds.CONDCrossAttn(cross_attn)
+        device = kwargs["device"]
+        task_emb = torch.tensor([1, 0]).float().to(device)
+        task_emb = torch.cat([torch.sin(task_emb), torch.cos(task_emb)]).unsqueeze(0)
+        out['y'] = ldm_patched.modules.conds.CONDRegular(task_emb)
+        return out
+
+    def __init__(self, model_config, model_type=ModelType.EPS, device=None):
+        super().__init__(model_config, model_type, device=device)
+
 
 class StableCascade_C(BaseModel):
     def __init__(self, model_config, model_type=ModelType.STABLE_CASCADE, device=None):

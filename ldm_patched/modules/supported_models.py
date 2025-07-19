@@ -518,6 +518,22 @@ class SDXL_instructpix2pix(SDXL):
 
     def get_model(self, state_dict, prefix="", device=None):
         return model_base.SDXL_instructpix2pix(self, model_type=self.model_type(state_dict, prefix), device=device)
+    
+class LotusD(SD20):
+    unet_config = {
+        "model_channels": 320,
+        "use_linear_in_transformer": True,
+        "use_temporal_attention": False,
+        "adm_in_channels": 4,
+        "in_channels": 4,
+    }
+
+    unet_extra_config = {
+        "num_classes": 'sequential'
+    }
+
+    def get_model(self, state_dict, prefix="", device=None):
+        return model_base.Lotus(self, device=device)
 
 class SD3(supported_models_base.BASE):
     unet_config = {
@@ -983,7 +999,7 @@ class Hunyuan3Dv2(supported_models_base.BASE):
     }
 
     memory_usage_factor = 3.5
-    
+
     clip_vision_prefix = "conditioner.main_image_encoder.model."
     vae_key_prefix = ["vae."]
     latent_format = latent_formats.Hunyuan3Dv2
