@@ -9,6 +9,7 @@ import ldm_patched.modules.model_patcher
 import ldm_patched.modules.model_management
 import ldm_patched.modules.utils
 import ldm_patched.modules.clip_model
+import ldm_patched.modules.image_encoders.dino2
 
 class Output:
     def __getitem__(self, key):
@@ -34,6 +35,12 @@ def clip_preprocess(image, size=224, mean=[0.48145466, 0.4578275, 0.40821073], s
     image = torch.clip((255. * image), 0, 255).round() / 255.0
     return (image - mean.view([3,1,1])) / std.view([3,1,1])
 
+IMAGE_ENCODERS = {
+    "clip_vision": ldm_patched.modules.clip_model.CLIPVisionModelProjection,
+    "dinov2": ldm_patched.modules.image_encoders.dino2.Dinov2Model,
+
+}
+
 class ClipVisionModel():
     def __init__(self, json_config):
         with open(json_config) as f:
@@ -42,10 +49,11 @@ class ClipVisionModel():
         self.image_size = config.get("image_size", 224)
         self.image_mean = config.get("image_mean", [0.48145466, 0.4578275, 0.40821073])
         self.image_std = config.get("image_std", [0.26862954, 0.26130258, 0.27577711])
+        model_class = IMAGE_ENCODERS.get(config.get("model_type", "clip_vision"))
         self.load_device = ldm_patched.modules.model_management.text_encoder_device()
         offload_device = ldm_patched.modules.model_management.text_encoder_offload_device()
         self.dtype = ldm_patched.modules.model_management.text_encoder_dtype(self.load_device)
-        self.model = ldm_patched.modules.clip_model.CLIPVisionModelProjection(config, self.dtype, offload_device, ldm_patched.modules.ops.manual_cast)
+        self.model = model_class(config, self.dtype, offload_device, ldm_patched.modules.ops.manual_cast)
         self.model.eval()
 
         self.patcher = ldm_patched.modules.model_patcher.ModelPatcher(self.model, load_device=self.load_device, offload_device=offload_device)
