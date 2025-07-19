@@ -981,6 +981,9 @@ class Hunyuan3Dv2(supported_models_base.BASE):
         "multiplier": 1.0,
         "shift": 1.0,
     }
+
+    memory_usage_factor = 3.5
+    
     clip_vision_prefix = "conditioner.main_image_encoder.model."
     vae_key_prefix = ["vae."]
     latent_format = latent_formats.Hunyuan3Dv2
