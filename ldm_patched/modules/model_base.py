@@ -59,6 +59,7 @@ class ModelType(Enum):
     FLOW = 6
     V_PREDICTION_CONTINUOUS = 7
     FLUX = 8
+    IMG_TO_IMG = 9
 
 
 from ldm_patched.modules.model_sampling import EPS, V_PREDICTION, EDM, ModelSamplingDiscrete, ModelSamplingContinuousEDM, StableCascadeSampling, ModelSamplingContinuousV
@@ -89,6 +90,8 @@ def model_sampling(model_config, model_type):
     elif model_type == ModelType.FLUX:
         c = ldm_patched.modules.model_sampling.CONST
         s = ldm_patched.modules.model_sampling.ModelSamplingFlux
+    elif model_type == ModelType.IMG_TO_IMG:
+        c = ldm_patched.modules.model_sampling.IMG_TO_IMG
 
     class ModelSampling(s, c):
         pass
