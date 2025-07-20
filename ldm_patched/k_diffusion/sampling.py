@@ -749,9 +749,13 @@ def sample_lms(model, x, sigmas, extra_args=None, callback=None, disable=None, o
             ds.pop(0)
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigmas[i], 'denoised': denoised})
-        cur_order = min(i + 1, order)
-        coeffs = [linear_multistep_coeff(cur_order, sigmas_cpu, i, j) for j in range(cur_order)]
-        x = x + sum(coeff * d for coeff, d in zip(coeffs, reversed(ds)))
+        if sigmas[i + 1] == 0:
+            # Denoising step
+            x = denoised
+        else:
+            cur_order = min(i + 1, order)
+            coeffs = [linear_multistep_coeff(cur_order, sigmas_cpu, i, j) for j in range(cur_order)]
+            x = x + sum(coeff * d for coeff, d in zip(coeffs, reversed(ds)))
     return x
 
 
@@ -1398,7 +1402,9 @@ def sample_ipndm(model, x, sigmas, extra_args=None, callback=None, disable=None)
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigmas[i], 'denoised': denoised})
         d_cur = (x_cur - denoised) / t_cur
         order = min(max_order, i+1)
-        if order == 1:      # First Euler step.
+        if t_next == 0:     # Denoising step
+            x_next = denoised
+        elif order == 1:    # First Euler step.
             x_next = x_cur + (t_next - t_cur) * d_cur
         elif order == 2:    # Use one history point.
             x_next = x_cur + (t_next - t_cur) * (3 * d_cur - buffer_model[-1]) / 2
@@ -1433,7 +1439,9 @@ def sample_ipndm_v(model, x, sigmas, extra_args=None, callback=None, disable=Non
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigmas[i], 'denoised': denoised})
         d_cur = (x_cur - denoised) / t_cur
         order = min(max_order, i+1)
-        if order == 1:      # First Euler step.
+        if t_next == 0:     # Denoising step
+            x_next = denoised
+        elif order == 1:    # First Euler step.
             x_next = x_cur + (t_next - t_cur) * d_cur
         elif order == 2:    # Use one history point.
             h_n = (t_next - t_cur)
@@ -3168,19 +3176,19 @@ def sample_gradient_estimation(model, x, sigmas, extra_args=None, callback=None,
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigmas[i], 'denoised': denoised})
         dt = sigmas[i + 1] - sigmas[i]
-        if i == 0:
+        if sigmas[i + 1] == 0:
+            # Denoising step
+            x = denoised
+        else:
             # Euler method
             if cfg_pp:
                 x = denoised + d * sigmas[i + 1]
             else:
                 x = x + d * dt
-        else:
-            # Gradient estimation
-            if cfg_pp:
+
+            if i >= 1:
+                # Gradient estimation
                 d_bar = (ge_gamma - 1) * (d - old_d)
-                x = denoised + d * sigmas[i + 1] + d_bar * dt
-            else:
-                d_bar = ge_gamma * d + (1 - ge_gamma) * old_d
                 x = x + d_bar * dt
         old_d = d
     return x
