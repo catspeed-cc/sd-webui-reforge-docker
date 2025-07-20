@@ -102,6 +102,9 @@ parser.add_argument("--torch-compile-cudagraphs", action='store_true', help="Ena
 parser.add_argument("--torch-compile-trace", action='store_true', help="Enable tracing")
 parser.add_argument("--torch-compile-graph-diagram", action='store_true', help="Enable graph diagram")
 
+
+parser.add_argument("--supports-fp8-compute", action="store_true", help="ComfyUI will act like if the device supports fp8 compute.")
+
 class LatentPreviewMethod(enum.Enum):
     NoPreviews = "none"
     Auto = "auto"
