@@ -279,6 +279,13 @@ def model_lora_keys_unet(model, key_map={}):
                 key_map["transformer.{}".format(key_lora)] = k
                 key_map["diffusion_model.{}".format(key_lora)] = k  # Old loras
 
+    if isinstance(model, ldm_patched.modules.model_base.HiDream):
+        for k in sdk:
+            if k.startswith("diffusion_model."):
+                if k.endswith(".weight"):
+                    key_lora = k[len("diffusion_model."):-len(".weight")].replace(".", "_")
+                    key_map["lycoris_{}".format(key_lora)] = k #SimpleTuner lycoris format
+
     return key_map
 
 def pad_tensor_to_shape(tensor: torch.Tensor, new_shape: list[int]) -> torch.Tensor:
