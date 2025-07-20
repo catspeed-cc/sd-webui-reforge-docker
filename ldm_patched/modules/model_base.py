@@ -788,7 +788,7 @@ class PixArt(BaseModel):
         return out
 
 class Flux(BaseModel):
-    def __init__(self, model_config, model_type=ModelType.FLUX, device=None, unet_model=ldm_patched.modules.ldm.flux.model.Flux):
+    def __init__(self, model_config, model_type=ModelType.FLUX, device=None, unet_model=ldm_patched.ldm.flux.model.Flux):
         super().__init__(model_config, model_type, device=device, unet_model=unet_model)
 
     def concat_cond(self, **kwargs):
@@ -1109,7 +1109,7 @@ class HiDream(BaseModel):
         return out
 
 class Chroma(Flux):
-    def __init__(self, model_config, model_type=ModelType.Flux, device=None):
+    def __init__(self, model_config, model_type=ModelType.FLUX, device=None):
         super().__init__(model_config, model_type, device=device, unet_model=ldm_patched.ldm.chroma.model.Chroma)
 
 
