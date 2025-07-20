@@ -32,6 +32,7 @@ from einops import rearrange
 from ldm_patched.modules.args_parser import args
 
 MMAP_TORCH_FILES = args.mmap_torch_files
+DISABLE_MMAP = args.disable_mmap
 
 ALWAYS_SAFE_LOAD = False
 if hasattr(torch.serialization, "add_safe_globals"):  # TODO: this was added in pytorch 2.4, the unsafe path should be removed once earlier versions are deprecated
@@ -59,7 +60,10 @@ def load_torch_file(ckpt, safe_load=False, device=None, return_metadata=False):
             with safetensors.safe_open(ckpt, framework="pt", device=device.type) as f:
                 sd = {}
                 for k in f.keys():
-                    sd[k] = f.get_tensor(k)
+                    tensor = f.get_tensor(k)
+                    if DISABLE_MMAP:  # TODO: Not sure if this is the best way to bypass the mmap issues
+                        tensor = tensor.to(device=device, copy=True)
+                    sd[k] = tensor
                 if return_metadata:
                     metadata = f.metadata()
         except Exception as e:
