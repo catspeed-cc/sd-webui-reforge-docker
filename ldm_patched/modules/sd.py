@@ -44,6 +44,7 @@ import ldm_patched.modules.text_encoders.lumina2
 import ldm_patched.modules.text_encoders.wan
 import ldm_patched.modules.text_encoders.hidream
 import ldm_patched.modules.text_encoders.ace
+import ldm_patched.modules.text_encoders.omnigen2
 
 import ldm_patched.modules.text_encoders
 import ldm_patched.modules.lora
@@ -901,6 +902,7 @@ class TEModel(Enum):
     LLAMA3_8 = 7
     T5_XXL_OLD = 8
     GEMMA_2_2B = 9
+    QWEN25_3B = 10
 
 def detect_te_model(sd):
     if "text_model.encoder.layers.30.mlp.fc1.weight" in sd:
@@ -921,6 +923,8 @@ def detect_te_model(sd):
         return TEModel.T5_BASE
     if 'model.layers.0.post_feedforward_layernorm.weight' in sd:
         return TEModel.GEMMA_2_2B
+    if 'model.layers.0.self_attn.k_proj.bias' in sd:
+        return TEModel.QWEN25_3B
     if "model.layers.0.post_attention_layernorm.weight" in sd:
         return TEModel.LLAMA3_8
     return None
@@ -1021,6 +1025,9 @@ def load_text_encoder_state_dicts(state_dicts=[], embedding_directory=None, clip
             clip_target.clip = ldm_patched.modules.text_encoders.hidream.hidream_clip(**llama_detect(clip_data),
                                                                         clip_l=False, clip_g=False, t5=False, llama=True, dtype_t5=None, t5xxl_scaled_fp8=None)
             clip_target.tokenizer = ldm_patched.modules.text_encoders.hidream.HiDreamTokenizer
+        elif te_model == TEModel.QWEN25_3B:
+            clip_target.clip = ldm_patched.modules.text_encoders.omnigen2.te(**llama_detect(clip_data))
+            clip_target.tokenizer = ldm_patched.modules.text_encoders.omnigen2.Omnigen2Tokenizer
         else:
             # clip_l
             if clip_type == CLIPType.SD3:

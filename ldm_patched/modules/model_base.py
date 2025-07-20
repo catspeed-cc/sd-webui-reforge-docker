@@ -41,6 +41,7 @@ import ldm_patched.ldm.hunyuan3d.model
 import ldm_patched.ldm.hidream.model
 import ldm_patched.ldm.chroma.model
 import ldm_patched.ldm.ace.model
+import ldm_patched.ldm.omnigen.omnigen2
 
 import ldm_patched.modules.model_management
 import ldm_patched.modules.patcher_extension
@@ -1228,4 +1229,34 @@ class ACEStep(BaseModel):
             out['lyric_token_idx'] = ldm_patched.modules.conds.CONDRegular(conditioning_lyrics)
         out['speaker_embeds'] = ldm_patched.modules.conds.CONDRegular(torch.zeros(noise.shape[0], 512, device=noise.device, dtype=noise.dtype))
         out['lyrics_strength'] = ldm_patched.modules.conds.CONDConstant(kwargs.get("lyrics_strength", 1.0))
+        return out
+    
+class Omnigen2(BaseModel):
+    def __init__(self, model_config, model_type=ModelType.FLOW, device=None):
+        super().__init__(model_config, model_type, device=device, unet_model=ldm_patched.ldm.omnigen.omnigen2.OmniGen2Transformer2DModel)
+        self.memory_usage_factor_conds = ("ref_latents",)
+
+    def extra_conds(self, **kwargs):
+        out = super().extra_conds(**kwargs)
+        attention_mask = kwargs.get("attention_mask", None)
+        if attention_mask is not None:
+            if torch.numel(attention_mask) != attention_mask.sum():
+                out['attention_mask'] = ldm_patched.modules.conds.CONDRegular(attention_mask)
+            out['num_tokens'] = ldm_patched.modules.conds.CONDConstant(max(1, torch.sum(attention_mask).item()))
+        cross_attn = kwargs.get("cross_attn", None)
+        if cross_attn is not None:
+            out['c_crossattn'] = ldm_patched.modules.conds.CONDRegular(cross_attn)
+        ref_latents = kwargs.get("reference_latents", None)
+        if ref_latents is not None:
+            latents = []
+            for lat in ref_latents:
+                latents.append(self.process_latent_in(lat))
+            out['ref_latents'] = ldm_patched.modules.conds.CONDList(latents)
+        return out
+
+    def extra_conds_shapes(self, **kwargs):
+        out = {}
+        ref_latents = kwargs.get("reference_latents", None)
+        if ref_latents is not None:
+            out['ref_latents'] = list([1, 16, sum(map(lambda a: math.prod(a.size()), ref_latents)) // 16])
         return out
