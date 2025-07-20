@@ -1005,6 +1005,17 @@ class WAN21_FunControl2V(WAN21_T2V):
         out = model_base.WAN21(self, image_to_video=False, device=device)
         return out
     
+class WAN21_Camera(WAN21_T2V):
+    unet_config = {
+        "image_model": "wan2.1",
+        "model_type": "i2v",
+        "in_dim": 32,
+    }
+
+    def get_model(self, state_dict, prefix="", device=None):
+        out = model_base.WAN21_Camera(self, image_to_video=False, device=device)
+        return out
+    
 class WAN21_Vace(WAN21_T2V):
     unet_config = {
         "image_model": "wan2.1",
