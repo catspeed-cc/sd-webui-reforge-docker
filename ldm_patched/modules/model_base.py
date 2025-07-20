@@ -39,6 +39,7 @@ import ldm_patched.ldm.wan.model
 import ldm_patched.ldm.hunyuan3d.model
 import ldm_patched.ldm.hidream.model
 import ldm_patched.ldm.chroma.model
+import ldm_patched.ldm.ace.model
 
 import ldm_patched.modules.model_management
 import ldm_patched.modules.patcher_extension
@@ -1118,4 +1119,22 @@ class Chroma(Flux):
         guidance = kwargs.get("guidance", 0)
         if guidance is not None:
             out['guidance'] = ldm_patched.modules.conds.CONDRegular(torch.FloatTensor([guidance]))
+        return out
+
+class ACEStep(BaseModel):
+    def __init__(self, model_config, model_type=ModelType.FLOW, device=None):
+        super().__init__(model_config, model_type, device=device, unet_model=ldm_patched.ldm.ace.model.ACEStepTransformer2DModel)
+
+    def extra_conds(self, **kwargs):
+        out = super().extra_conds(**kwargs)
+        noise = kwargs.get("noise", None)
+
+        cross_attn = kwargs.get("cross_attn", None)
+        if cross_attn is not None:
+            out['c_crossattn'] = ldm_patched.modules.conds.CONDRegular(cross_attn)
+
+        conditioning_lyrics = kwargs.get("conditioning_lyrics", None)
+        if cross_attn is not None:
+            out['lyric_token_idx'] = ldm_patched.modules.conds.CONDRegular(conditioning_lyrics)
+        out['speaker_embeds'] = ldm_patched.modules.conds.CONDRegular(torch.zeros(noise.shape[0], 512, device=noise.device, dtype=noise.dtype))
         return out
