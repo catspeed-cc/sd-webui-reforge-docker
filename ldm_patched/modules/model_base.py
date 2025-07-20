@@ -34,6 +34,7 @@ import ldm_patched.ldm.flux.model
 import ldm_patched.ldm.lightricks.model
 import ldm_patched.ldm.hunyuan_video.model
 import ldm_patched.ldm.cosmos.model
+import ldm_patched.ldm.cosmos.predict2
 import ldm_patched.ldm.lumina.model
 import ldm_patched.ldm.wan.model
 import ldm_patched.ldm.hunyuan3d.model
@@ -48,6 +49,7 @@ import ldm_patched.modules.ops
 from enum import Enum
 from . import utils
 import ldm_patched.modules.latent_formats
+import ldm_patched.modules.model_sampling
 import math
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -63,9 +65,39 @@ class ModelType(Enum):
     V_PREDICTION_CONTINUOUS = 7
     FLUX = 8
     IMG_TO_IMG = 9
+    FLOW_COSMOS = 10
 
 
-from ldm_patched.modules.model_sampling import EPS, V_PREDICTION, EDM, ModelSamplingDiscrete, ModelSamplingContinuousEDM, StableCascadeSampling, ModelSamplingContinuousV
+def model_sampling(model_config, model_type):
+    s = ldm_patched.modules.model_sampling.ModelSamplingDiscrete
+
+    if model_type == ModelType.EPS:
+        c = ldm_patched.modules.model_sampling.EPS
+    elif model_type == ModelType.V_PREDICTION:
+        c = ldm_patched.modules.model_sampling.V_PREDICTION
+    elif model_type == ModelType.V_PREDICTION_EDM:
+        c = ldm_patched.modules.model_sampling.V_PREDICTION
+        s = ldm_patched.modules.model_sampling.ModelSamplingContinuousEDM
+    elif model_type == ModelType.FLOW:
+        c = ldm_patched.modules.model_sampling.CONST
+        s = ldm_patched.modules.model_sampling.ModelSamplingDiscreteFlow
+    elif model_type == ModelType.STABLE_CASCADE:
+        c = ldm_patched.modules.model_sampling.EPS
+        s = ldm_patched.modules.model_sampling.StableCascadeSampling
+    elif model_type == ModelType.EDM:
+        c = ldm_patched.modules.model_sampling.EDM
+        s = ldm_patched.modules.model_sampling.ModelSamplingContinuousEDM
+    elif model_type == ModelType.V_PREDICTION_CONTINUOUS:
+        c = ldm_patched.modules.model_sampling.V_PREDICTION
+        s = ldm_patched.modules.model_sampling.ModelSamplingContinuousV
+    elif model_type == ModelType.FLUX:
+        c = ldm_patched.modules.model_sampling.CONST
+        s = ldm_patched.modules.model_sampling.ModelSamplingFlux
+    elif model_type == ModelType.IMG_TO_IMG:
+        c = ldm_patched.modules.model_sampling.IMG_TO_IMG
+    elif model_type == ModelType.FLOW_COSMOS:
+        c = ldm_patched.modules.model_sampling.COSMOS_RFLOW
+        s = ldm_patched.modules.model_sampling.ModelSamplingCosmosRFlow
 
 
 def model_sampling(model_config, model_type):
@@ -996,6 +1028,22 @@ class CosmosVideo(BaseModel):
             latent_image = latent_image + noise
         latent_image = self.model_sampling.calculate_input(torch.tensor([sigma_noise_augmentation], device=latent_image.device, dtype=latent_image.dtype), latent_image)
         return latent_image * ((sigma ** 2 + self.model_sampling.sigma_data ** 2) ** 0.5)
+    
+class CosmosPredict2(BaseModel):
+    def __init__(self, model_config, model_type=ModelType.FLOW_COSMOS, image_to_video=False, device=None):
+        super().__init__(model_config, model_type, device=device, unet_model=ldm_patched.ldm.cosmos.predict2.MiniTrainDIT)
+        self.image_to_video = image_to_video
+        if self.image_to_video:
+            self.concat_keys = ("mask_inverted",)
+
+    def extra_conds(self, **kwargs):
+        out = super().extra_conds(**kwargs)
+        cross_attn = kwargs.get("cross_attn", None)
+        if cross_attn is not None:
+            out['c_crossattn'] = ldm_patched.modules.conds.CONDRegular(cross_attn)
+
+        out['fps'] = ldm_patched.modules.conds.CONDConstant(kwargs.get("frame_rate", None))
+        return out
 
 class Lumina2(BaseModel):
     def __init__(self, model_config, model_type=ModelType.FLOW, device=None):
