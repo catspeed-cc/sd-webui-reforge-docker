@@ -306,7 +306,7 @@ try:
         print("AMD arch: {}".format(arch))
         print("ROCm version: {}".format(rocm_version))
         if args.attention_split == False and args.attention_quad == False:
-            if torch_version_numeric[0] >= 2 and torch_version_numeric[1] >= 7:  # works on 2.6 but doesn't actually seem to improve much
+            if torch_version_numeric >= (2, 7):  # works on 2.6 but doesn't actually seem to improve much
                 if any((a in arch) for a in ["gfx1100", "gfx1101", "gfx1151"]):  # TODO: more arches
                     ENABLE_PYTORCH_ATTENTION = True
 except:
@@ -329,7 +329,7 @@ except:
     pass
 
 try:
-    if torch_version_numeric[0] == 2 and torch_version_numeric[1] >= 5:
+    if torch_version_numeric >= (2, 5):
         torch.backends.cuda.allow_fp16_bf16_reduction_math_sdp(True)
 except:
     logging.warning("Warning, could not set allow_fp16_bf16_reduction_math_sdp")
@@ -1343,11 +1343,11 @@ def supports_fp8_compute(device=None):
     if props.minor < 9:
         return False
 
-    if torch_version_numeric[0] < 2 or (torch_version_numeric[0] == 2 and torch_version_numeric[1] < 3):
+    if torch_version_numeric < (2, 3):
         return False
 
     if WINDOWS:
-        if (torch_version_numeric[0] == 2 and torch_version_numeric[1] < 4):
+        if torch_version_numeric < (2, 4):
             return False
 
     return True
