@@ -16,23 +16,25 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 from __future__ import annotations
-from typing import Optional, Callable
-import torch
+
+import collections
 import copy
 import inspect
 import logging
-import uuid
-import collections
 import math
+import uuid
+from typing import Callable, Optional
 
-import ldm_patched.modules.utils
+import torch
+
 import ldm_patched.float
-import ldm_patched.modules.model_management
-import ldm_patched.modules.lora
 import ldm_patched.hooks
+import ldm_patched.modules.lora
+import ldm_patched.modules.model_management
 import ldm_patched.modules.patcher_extension
-from ldm_patched.modules.patcher_extension import CallbacksMP, WrappersMP, PatcherInjection
+import ldm_patched.modules.utils
 from ldm_patched.modules.types import UnetWrapperFunction
+from ldm_patched.modules.patcher_extension import CallbacksMP, PatcherInjection, WrappersMP
 
 extra_weight_calculators = {}
 
