@@ -12,6 +12,7 @@ from ldm_patched.ldm.flux.math import apply_rope, rope
 from ldm_patched.ldm.flux.layers import LastLayer
 from ldm_patched.ldm.modules.attention import optimized_attention
 import ldm_patched.modules.model_management
+import ldm_patched.ldm.common_dit
 
 
 # Copied from https://github.com/black-forest-labs/flux/blob/main/src/flux/modules/layers.py
@@ -700,7 +701,8 @@ class HiDreamImageTransformer2DModel(nn.Module):
         control = None,
         transformer_options = {},
     ) -> torch.Tensor:
-        hidden_states = x
+        bs, c, h, w = x.shape
+        hidden_states = ldm_patched.ldm.common_dit.pad_to_patch_size(x, (self.patch_size, self.patch_size))
         timesteps = t
         pooled_embeds = y
         T5_encoder_hidden_states = context
@@ -793,4 +795,5 @@ class HiDreamImageTransformer2DModel(nn.Module):
         hidden_states = hidden_states[:, :image_tokens_seq_len, ...]
         output = self.final_layer(hidden_states, adaln_input)
         output = self.unpatchify(output, img_sizes)
-        return -output
+        return -output[:, :, :h, :w]
+    
