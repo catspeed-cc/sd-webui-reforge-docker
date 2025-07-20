@@ -50,6 +50,7 @@ if RMSNorm is None:
                 )
             else:
                 self.register_parameter("weight", None)
+            self.bias = None
 
         def forward(self, x):
             return rms_norm(x, self.weight, self.eps)
