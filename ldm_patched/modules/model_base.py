@@ -99,35 +99,6 @@ def model_sampling(model_config, model_type):
         c = ldm_patched.modules.model_sampling.COSMOS_RFLOW
         s = ldm_patched.modules.model_sampling.ModelSamplingCosmosRFlow
 
-
-def model_sampling(model_config, model_type):
-    s = ModelSamplingDiscrete
-
-    if model_type == ModelType.EPS:
-        c = EPS
-    elif model_type == ModelType.V_PREDICTION:
-        c = V_PREDICTION
-    elif model_type == ModelType.V_PREDICTION_EDM:
-        c = V_PREDICTION
-        s = ModelSamplingContinuousEDM
-    elif model_type == ModelType.FLOW:
-        c = ldm_patched.modules.model_sampling.CONST
-        s = ldm_patched.modules.model_sampling.ModelSamplingDiscreteFlow
-    elif model_type == ModelType.STABLE_CASCADE:
-        c = EPS
-        s = StableCascadeSampling
-    elif model_type == ModelType.EDM:
-        c = EDM
-        s = ModelSamplingContinuousEDM
-    elif model_type == ModelType.V_PREDICTION_CONTINUOUS:
-        c = V_PREDICTION
-        s = ModelSamplingContinuousV
-    elif model_type == ModelType.FLUX:
-        c = ldm_patched.modules.model_sampling.CONST
-        s = ldm_patched.modules.model_sampling.ModelSamplingFlux
-    elif model_type == ModelType.IMG_TO_IMG:
-        c = ldm_patched.modules.model_sampling.IMG_TO_IMG
-
     class ModelSampling(s, c):
         pass
 
