@@ -42,7 +42,6 @@ import ldm_patched.modules.text_encoders.cosmos
 import ldm_patched.modules.text_encoders.lumina2
 import ldm_patched.modules.text_encoders.wan
 import ldm_patched.modules.text_encoders.hidream
-import ldm_patched.modules.text_encoders.chroma
 
 import ldm_patched.modules.text_encoders
 import ldm_patched.modules.lora
@@ -947,7 +946,7 @@ def load_text_encoder_state_dicts(state_dicts=[], embedding_directory=None, clip
             elif clip_type == CLIPType.LTXV:
                 clip_target.clip = ldm_patched.modules.text_encoders.lt.ltxv_te(**t5xxl_detect(clip_data))
                 clip_target.tokenizer = ldm_patched.modules.text_encoders.lt.LTXVT5Tokenizer
-            elif clip_type == CLIPType.PIXART:
+            elif clip_type == CLIPType.PIXART or clip_type == CLIPType.CHROMA:
                 clip_target.clip = ldm_patched.modules.text_encoders.pixart_t5.pixart_te(**t5xxl_detect(clip_data))
                 clip_target.tokenizer = ldm_patched.modules.text_encoders.pixart_t5.PixArtTokenizer
             elif clip_type == CLIPType.WAN:
@@ -958,9 +957,6 @@ def load_text_encoder_state_dicts(state_dicts=[], embedding_directory=None, clip
                 clip_target.clip = ldm_patched.modules.text_encoders.hidream.hidream_clip(**t5xxl_detect(clip_data),
                                                                         clip_l=False, clip_g=False, t5=True, llama=False, dtype_llama=None, llama_scaled_fp8=None)
                 clip_target.tokenizer = ldm_patched.modules.text_encoders.hidream.HiDreamTokenizer
-            elif clip_type == CLIPType.CHROMA:
-                clip_target.clip = ldm_patched.modules.text_encoders.chroma.chroma_te(**t5xxl_detect(clip_data))
-                clip_target.tokenizer = ldm_patched.modules.text_encoders.chroma.ChromaT5Tokenizer
             else: #CLIPType.MOCHI
                 clip_target.clip = ldm_patched.modules.text_encoders.genmo.mochi_te(**t5xxl_detect(clip_data))
                 clip_target.tokenizer = ldm_patched.modules.text_encoders.genmo.MochiT5Tokenizer

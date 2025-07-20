@@ -17,7 +17,6 @@ import ldm_patched.modules.text_encoders.hunyuan_video
 import ldm_patched.modules.text_encoders.cosmos
 import ldm_patched.modules.text_encoders.lumina2
 import ldm_patched.modules.text_encoders.wan
-import ldm_patched.modules.text_encoders.chroma
 from modules.shared import opts
 
 from . import supported_models_base
@@ -1105,7 +1104,7 @@ class Chroma(supported_models_base.BASE):
     def clip_target(self, state_dict={}):
         pref = self.text_encoder_key_prefix[0]
         t5_detect = ldm_patched.modules.text_encoders.sd3_clip.t5_xxl_detect(state_dict, "{}t5xxl.transformer.".format(pref))
-        return supported_models_base.ClipTarget(ldm_patched.modules.text_encoders.chroma.ChromaTokenizer, ldm_patched.modules.text_encoders.chroma.chroma_te(**t5_detect))
+        return supported_models_base.ClipTarget(ldm_patched.modules.text_encoders.pixart_t5.PixArtTokenizer, ldm_patched.modules.text_encoders.pixart_t5.pixart_te(**t5_detect))
 
 models = [LotusD, Stable_Zero123, SD15_instructpix2pix, SD15, SD20, SD21UnclipL, SD21UnclipH, SDXL_instructpix2pix, SDXLRefiner, SDXL, SSD1B, KOALA_700M, KOALA_1B, Segmind_Vega, SD_X4Upscaler, Stable_Cascade_C, Stable_Cascade_B, SV3D_u, SV3D_p, SD3, StableAudio, AuraFlow, PixArtAlpha, PixArtSigma, HunyuanDiT, HunyuanDiT1, FluxInpaint, Flux, FluxSchnell, GenmoMochi, LTXV, HunyuanVideoSkyreelsI2V, HunyuanVideoI2V, HunyuanVideo, CosmosT2V, CosmosI2V, Lumina2, WAN21_T2V, WAN21_I2V, WAN21_FunControl2V, WAN21_Vace, Hunyuan3Dv2mini, Hunyuan3Dv2, HiDream, Chroma]
 

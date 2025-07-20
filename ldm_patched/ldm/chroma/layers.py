@@ -1,7 +1,7 @@
 import torch
 from torch import Tensor, nn
 
-from .math import attention
+from ldm_patched.ldm.flux.math import attention
 from ldm_patched.ldm.flux.layers import (
     MLPEmbedder,
     RMSNorm,
