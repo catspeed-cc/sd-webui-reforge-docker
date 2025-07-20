@@ -1108,7 +1108,7 @@ class HiDream(BaseModel):
         return out
 
 class Chroma(Flux):
-    def __init__(self, model_config, model_type=ModelType.FLOW, device=None):
+    def __init__(self, model_config, model_type=ModelType.Flux, device=None):
         super().__init__(model_config, model_type, device=device, unet_model=ldm_patched.ldm.chroma.model.Chroma)
 
 
