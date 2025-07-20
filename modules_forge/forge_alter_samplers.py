@@ -77,6 +77,8 @@ class AlterSampler(sd_samplers_kdiffusion.KDiffusionSampler):
             'ER SDE': k_diffusion_sampling.sample_er_sde,
             'SEEDS_2': k_diffusion_sampling.sample_seeds_2,
             'SEEDS_3': k_diffusion_sampling.sample_seeds_3,
+            'SA-Solver': k_diffusion_sampling.sample_sa_solver,
+            'SA-Solver-Pece': k_diffusion_sampling.sample_sa_solver_pece,
         }
         
         sampler_function = sampler_functions.get(sampler_name)
@@ -232,6 +234,8 @@ samplers_data_alter = [
     sd_samplers_common.SamplerData('Gradient Estimation CFG++', build_constructor(sampler_name='gradient_estimation_CFG++'), ['gradient_estimation_CFG++'], {}),
     sd_samplers_common.SamplerData('SEEDS 2 DP', build_constructor(sampler_name='SEEDS_2'), ['SEEDS_2'], {}),
     sd_samplers_common.SamplerData('SEEDS 3 DP', build_constructor(sampler_name='SEEDS_3'), ['SEEDS_3'], {}),
+    sd_samplers_common.SamplerData('SA-Solver', build_constructor(sampler_name='SA-Solver'), ['SA-Solver'], {}),
+    sd_samplers_common.SamplerData('SA-Solver-Pece', build_constructor(sampler_name='SA-Solver-Pece'), ['SA-Solver-Pece'], {}),
     # sd_samplers_common.SamplerData('Kohaku_LoNyu_Yog CFG++', build_constructor(sampler_name='kohaku_lonyu_yog_cfg_pp'), ['kohaku_lonyu_yog_cfg_pp'], {}),
     sd_samplers_common.SamplerData('DPM++ 2M DY', build_constructor(sampler_name='dpmpp_2m_dy'), ['dpmpp_2m_dy'], {}),
     sd_samplers_common.SamplerData('DPM++ 3M DY', build_constructor(sampler_name='dpmpp_3m_dy'), ['dpmpp_3m_dy'], {}),
