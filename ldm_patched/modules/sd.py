@@ -42,6 +42,7 @@ import ldm_patched.modules.text_encoders.cosmos
 import ldm_patched.modules.text_encoders.lumina2
 import ldm_patched.modules.text_encoders.wan
 import ldm_patched.modules.text_encoders.hidream
+import ldm_patched.modules.text_encoders.chroma
 
 import ldm_patched.modules.text_encoders
 import ldm_patched.modules.lora
@@ -843,6 +844,7 @@ class CLIPType(Enum):
     LUMINA2 = 12
     WAN = 13
     HIDREAM = 14
+    CHROMA = 15
 
 def load_clip(ckpt_paths, embedding_directory=None, clip_type=CLIPType.STABLE_DIFFUSION, model_options={}):
     clip_data = []
@@ -956,6 +958,9 @@ def load_text_encoder_state_dicts(state_dicts=[], embedding_directory=None, clip
                 clip_target.clip = ldm_patched.modules.text_encoders.hidream.hidream_clip(**t5xxl_detect(clip_data),
                                                                         clip_l=False, clip_g=False, t5=True, llama=False, dtype_llama=None, llama_scaled_fp8=None)
                 clip_target.tokenizer = ldm_patched.modules.text_encoders.hidream.HiDreamTokenizer
+            elif clip_type == CLIPType.CHROMA:
+                clip_target.clip = ldm_patched.modules.text_encoders.chroma.chroma_te(**t5xxl_detect(clip_data))
+                clip_target.tokenizer = ldm_patched.modules.text_encoders.chroma.ChromaT5Tokenizer
             else: #CLIPType.MOCHI
                 clip_target.clip = ldm_patched.modules.text_encoders.genmo.mochi_te(**t5xxl_detect(clip_data))
                 clip_target.tokenizer = ldm_patched.modules.text_encoders.genmo.MochiT5Tokenizer
