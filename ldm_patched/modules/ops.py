@@ -23,6 +23,7 @@ import contextlib
 from ldm_patched.modules.args_parser  import args, PerformanceFeature
 import ldm_patched.float
 import ldm_patched.modules.rmsnorm
+import contextlib
 
 from modules_forge import stream
 
@@ -60,20 +61,28 @@ def cast_bias_weight(s, input=None, dtype=None, device=None, bias_dtype=None):
             device = input.device
 
     offload_stream = ldm_patched.modules.model_management.get_offload_stream(device)
+    if offload_stream is not None:
+        wf_context = offload_stream
+    else:
+        wf_context = contextlib.nullcontext()
+
     bias = None
     non_blocking = ldm_patched.modules.model_management.device_supports_non_blocking(device)
     if s.bias is not None:
         has_function = len(s.bias_function) > 0
         bias = ldm_patched.modules.model_management.cast_to(s.bias, bias_dtype, device, non_blocking=non_blocking, copy=has_function, stream=offload_stream)
+
         if has_function:
-            for f in s.bias_function:
-                bias = f(bias)
+            with wf_context:
+                for f in s.bias_function:
+                    bias = f(bias)
 
     has_function = len(s.weight_function) > 0
     weight = ldm_patched.modules.model_management.cast_to(s.weight, dtype, device, non_blocking=non_blocking, copy=has_function, stream=offload_stream)
     if has_function:
-        for f in s.weight_function:
-            weight = f(weight)
+        with wf_context:
+            for f in s.weight_function:
+                weight = f(weight)
 
     ldm_patched.modules.model_management.sync_stream(device, offload_stream)
     return weight, bias
