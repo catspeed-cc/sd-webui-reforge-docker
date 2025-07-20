@@ -22,6 +22,7 @@ import ldm_patched.modules.model_management
 import contextlib
 from ldm_patched.modules.args_parser  import args, PerformanceFeature
 import ldm_patched.float
+import ldm_patched.modules.rmsnorm
 
 from modules_forge import stream
 
@@ -192,6 +193,25 @@ class disable_weight_init:
                 weight = None
                 bias = None
             return torch.nn.functional.layer_norm(input, self.normalized_shape, weight, bias, self.eps)
+
+        def forward(self, *args, **kwargs):
+            if self.ldm_patched_cast_weights or len(self.weight_function) > 0 or len(self.bias_function) > 0:
+                return self.forward_ldm_patched_cast_weights(*args, **kwargs)
+            else:
+                return super().forward(*args, **kwargs)
+            
+    class RMSNorm(ldm_patched.modules.rmsnorm.RMSNorm, CastWeightBiasOp):
+        def reset_parameters(self):
+            self.bias = None
+            return None
+
+        def forward_ldm_patched_cast_weights(self, input):
+            if self.weight is not None:
+                weight, bias = cast_bias_weight(self, input)
+            else:
+                weight = None
+            return ldm_patched.modules.rmsnorm.rms_norm(input, weight, self.eps)  # TODO: switch to commented out line when old torch is deprecated
+            # return torch.nn.functional.rms_norm(input, self.normalized_shape, weight, self.eps)
 
         def forward(self, *args, **kwargs):
             if self.ldm_patched_cast_weights or len(self.weight_function) > 0 or len(self.bias_function) > 0:
