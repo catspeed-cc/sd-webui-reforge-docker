@@ -41,6 +41,7 @@ import ldm_patched.modules.text_encoders.hunyuan_video
 import ldm_patched.modules.text_encoders.cosmos
 import ldm_patched.modules.text_encoders.lumina2
 import ldm_patched.modules.text_encoders.wan
+import ldm_patched.modules.text_encoders.hidream
 
 import ldm_patched.modules.text_encoders
 import ldm_patched.modules.lora
@@ -980,6 +981,9 @@ def load_text_encoder_state_dicts(state_dicts=[], embedding_directory=None, clip
     elif len(clip_data) == 3:
         clip_target.clip = ldm_patched.modules.text_encoders.sd3_clip.sd3_clip(**t5xxl_detect(clip_data))
         clip_target.tokenizer = ldm_patched.modules.text_encoders.sd3_clip.SD3Tokenizer
+    elif len(clip_data) == 4:
+        clip_target.clip = ldm_patched.modules.text_encoders.hidream.hidream_clip(**t5xxl_detect(clip_data), **llama_detect(clip_data))
+        clip_target.tokenizer = ldm_patched.modules.text_encoders.hidream.HiDreamTokenizer
 
     parameters = 0
     for c in clip_data:

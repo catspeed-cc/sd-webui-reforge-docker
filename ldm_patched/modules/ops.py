@@ -316,6 +316,9 @@ class manual_cast(disable_weight_init):
     class ConvTranspose1d(disable_weight_init.ConvTranspose1d):
         ldm_patched_cast_weights = True
 
+    class RMSNorm(disable_weight_init.RMSNorm):
+        ldm_patched_cast_weights = True
+
     class Embedding(disable_weight_init.Embedding):
         ldm_patched_cast_weights = True
 
