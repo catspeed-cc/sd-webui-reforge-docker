@@ -446,7 +446,7 @@ if CUBLAS_IS_AVAILABLE:
             def reset_parameters(self):
                 return None
 
-            def forward_comfy_cast_weights(self, input):
+            def forward_ldm_patched_cast_weights(self, input):
                 return super().forward(input)
 
             def forward(self, *args, **kwargs):
