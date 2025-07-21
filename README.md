@@ -4,10 +4,6 @@ Stable Diffusion WebUI Forge/reForge is a platform on top of [Stable Diffusion W
 
 The name "Forge" is inspired from "Minecraft Forge". This project is aimed at becoming SD WebUI's Forge.
 
-# Should we continue as reForge, or create a new branch of latest Forge and port things there, or directly update normal Forge?
-
-See more: https://github.com/Panchovix/stable-diffusion-webui-reForge/discussions/378
-
 # Important: Branches
 
 * main: Has all the possible upstream changes from A1111, new samplers/schedulers/sd options/etc and now, comfy backend updated to stream, so this deprecated the old forge backend.
