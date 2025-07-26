@@ -55,6 +55,18 @@ def refresh_unet_list():
     modules.sd_unet.list_unets()
 
 
+def sd_text_encoder_items():
+    import modules.sd_text_encoder
+
+    return ["Automatic"] + [x.label for x in modules.sd_text_encoder.text_encoder_options] + ["None"]
+
+
+def refresh_text_encoder_list():
+    import modules.sd_text_encoder
+
+    modules.sd_text_encoder.list_text_encoders()
+
+
 def list_checkpoint_tiles(use_short=False):
     import modules.sd_models
     return modules.sd_models.checkpoint_tiles(use_short)
