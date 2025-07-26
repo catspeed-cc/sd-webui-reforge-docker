@@ -22,7 +22,7 @@ if model_management.sage_attention_enabled():
     # Try to import SageAttention3 first
     sage_attention_available = False
     SAGE_ATTENTION_3_AVAILABLE = False
-    
+
     # Try SageAttention3 (sageattn package) first
     try:
         from sageattn import sageattn_blackwell
@@ -37,12 +37,9 @@ if model_management.sage_attention_enabled():
             print("Found SageAttention2 (sageattention package)")
         except ModuleNotFoundError as e:
             pass
-    
+
     if not sage_attention_available:
-        if e.name == "sageattention":
-            logging.error(f"\n\nTo use the `--use-sage-attention` feature, the `sageattention` package must be installed first.\ncommand:\n\t{sys.executable} -m pip install sageattention")
-        else:
-            raise e
+        logging.error(f"\n\nTo use the `--use-sage-attention` feature, the `sageattention` package must be installed first.\ncommand:\n\t{sys.executable} -m pip install sageattention")
         exit(-1)
 
 if model_management.flash_attention_enabled():
