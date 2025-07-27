@@ -361,7 +361,6 @@ def reconstruct_multicond_batch(c: MulticondLearnedConditioning, current_step):
 
     return conds_list, stacked
 
-
 re_attention = re.compile(r"""
 \\\(|
 \\\)|
@@ -486,15 +485,18 @@ def parse_prompt_attention(text):
         res = [["", 1.0]]
 
     # merge runs of identical weights
-    i = 0
-    while i + 1 < len(res):
-        if res[i][1] == res[i + 1][1]:
-            res[i][0] += res[i + 1][0]
-            res.pop(i + 1)
+    merged = []
+    [curr_text, curr_weight] = res.pop(0)
+    while res:
+        [next_text, next_weight] = res.pop(0)
+        if abs(next_weight - curr_weight) < 1e-4:
+            curr_text += next_text
         else:
-            i += 1
-
-    return res
+            merged.append([curr_text, curr_weight])
+            curr_text, curr_weight = next_text, next_weight
+    merged.append([curr_text, curr_weight])
+    
+    return merged
 
 if __name__ == "__main__":
     import doctest
