@@ -455,7 +455,7 @@ def parse_prompt_attention(text):
                 count = int(abs_val)
                 remain = abs_val - count
                 segment = res[start:]
-                if remain > 1e-4 or count > 1:
+                if remain > 1e-4 and count > 1:
                     res.extend(segment * max(0,count-2))
                     res.extend([[t, w * (1.0 + remain)] for t,w in segment])
                 else:
