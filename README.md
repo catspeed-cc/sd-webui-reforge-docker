@@ -12,11 +12,12 @@ If you want to keep using old forge backend as it is, for sd1.x,2.x and SDXL, I 
 
 # Important: Branches
 
-* main: Has all the possible upstream changes from A1111, new samplers/schedulers/sd options/etc and now, comfy backend updated to stream, so this deprecated the old forge backend.
-* dev: At this point (2025-07-20), it is the same as main branch.
-* dev2 and experimental: More unstable than dev, for now same as dev.
+* main: Main branch with multiple changes and updates. But not stable as main-old branch.
+* dev: Similar to main but with more unstable changes. I.e. using comfy/ldm_patched backend for sd1.x and sdxl instead of A1111.
+* dev2: More unstable than dev, for now same as dev.
 * experimental: same as dev2 but with gradio 4.
-* main-old: Branch with old forge backend. Kept as backup in any case, but it won't receive updates.
+* main-old: Branch with old forge backend. Possibly the most stable and older one (2025-03)
+* newmain_newforge: Based on latest forge2 (gradio4, flux, etc) with some small changes that I plan to add very slowly (i.e., real CFG++ at some point, more upscalers like reForge, etc). For now it has python 3.12 support and sage2/sage3 support.
 
 # Installing Forge/reForge
 
