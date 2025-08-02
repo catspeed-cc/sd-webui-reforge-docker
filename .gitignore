@@ -86,3 +86,13 @@ webui-user-8160-gpu3-nopass.sh
 webui-user-8160-gpu3-nopass_fp8.sh
 /models/VAE/*
 !/models/VAE/Put VAE here.txt
+
+# kthx
+GITHUB_PAT
+GITHUB_PAC
+
+# Exclude the work_dir_tmp
+work_dir_tmp/**/*
+# Exclude the mooleshacat release helper scripts
+github-*.sh
+
