@@ -11,6 +11,9 @@ reForge is at the point that unstability is really high, and I'm not sure if I w
 If you want to keep using old forge backend as it is, for sd1.x,2.x and SDXL, I suggest to use forge classic by @Haoming02 instead https://github.com/Haoming02/sd-webui-forge-classic, as at the moment that is the real succesor to old forge.
 
 # Important: Branches
+# Update: Will shift focus on newmain_newforge branch, and main/dev/dev2/experimental/gradio4-main will have only bug fixes and not new features.
+
+You can read more on https://github.com/Panchovix/stable-diffusion-webui-reForge/discussions/377#discussioncomment-14010687
 
 * main: Main branch with multiple changes and updates. But not stable as main-old branch.
 * dev: Similar to main but with more unstable changes. I.e. using comfy/ldm_patched backend for sd1.x and sdxl instead of A1111.
