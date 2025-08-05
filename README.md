@@ -22,7 +22,6 @@ You can read more on https://github.com/Panchovix/stable-diffusion-webui-reForge
 * main-old: Branch with old forge backend. Possibly the most stable and older one (2025-03)
 * newmain_newforge: Based on latest forge2 (gradio4, flux, etc) with some small changes that I plan to add very slowly (i.e., real CFG++ at some point, more upscalers like reForge, etc). For now it has python 3.12 support and sage2/sage3 support.
 
-
 # Installing Forge/reForge
 
 ### (Suggested) Clean install.
