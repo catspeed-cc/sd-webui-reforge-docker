@@ -15,9 +15,9 @@ You can read more on https://github.com/Panchovix/stable-diffusion-webui-reForge
 
 # Suggestion: For stability based on old forge, use forge classic
 
-reForge is at the point that unstability is really high, and I'm not sure if I will manage to make it work as expected with all the codebase.
+reForge(1) is not really stable for all tasks sadly.
 
-If you want to keep using old forge backend as it is, for sd1.x,2.x and SDXL, I suggest to use forge classic by @Haoming02 instead https://github.com/Haoming02/sd-webui-forge-classic, as at the moment that is the real succesor to old forge.
+So if you want to keep using old forge backend as it is, for sd1.x,2.x and SDXL, I suggest to use forge classic by @Haoming02 instead https://github.com/Haoming02/sd-webui-forge-classic, as at the moment that is the real succesor to old forge.
 
 Bug fixes and older branches based on forge classic:
 * main: Main branch with multiple changes and updates. But not stable as main-old branch.
@@ -803,6 +803,7 @@ Usually if an old extension rework using Forge/reForge's unet patcher, 80% codes
 Some people have been asking how to donate or support the project, and I'm really grateful for that! I did this buymeacoffe link from some suggestions!
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/Panchovix)
+
 
 
 
