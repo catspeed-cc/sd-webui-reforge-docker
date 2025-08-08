@@ -13,19 +13,20 @@ You can read more on https://github.com/Panchovix/stable-diffusion-webui-reForge
 * newmain_newforge: Based on latest forge2 (gradio4, flux, etc) with some small changes that I plan to add very slowly (i.e., real CFG++ at some point, more upscalers like reForge, etc). For now it has python 3.12 support and sage2/sage3 support, and new samplers from reforge (CFG++ is WIP)
 * newforge_dendev: Based on latest ersatzForge fork which is based on forge2 (gradio4, flux, chroma, cosmos, longclip, and a ton more) from @DenOfEquity (https://github.com/DenOfEquity/ersatzForge). Many thanks Den for letting me to work on base on your fork on reForge. I will try to add new features from old reforge as well, like all the samplers.
 
+# Suggestion: For stability based on old forge, use forge classic
+
+reForge is at the point that unstability is really high, and I'm not sure if I will manage to make it work as expected with all the codebase.
+
+If you want to keep using old forge backend as it is, for sd1.x,2.x and SDXL, I suggest to use forge classic by @Haoming02 instead https://github.com/Haoming02/sd-webui-forge-classic, as at the moment that is the real succesor to old forge.
+
 Bug fixes and older branches based on forge classic:
 * main: Main branch with multiple changes and updates. But not stable as main-old branch.
 * dev: Similar to main but with more unstable changes. I.e. using comfy/ldm_patched backend for sd1.x and sdxl instead of A1111.
 * dev2: More unstable than dev, for now same as dev.
 * experimental: same as dev2 but with gradio 4.
 * main-old: Branch with old forge backend. Possibly the most stable and older one (2025-03)
+
 # Installing Forge/reForge
-
-# Suggestion: For stability, use forge classic
-
-reForge is at the point that unstability is really high, and I'm not sure if I will manage to make it work as expected with all the codebase.
-
-If you want to keep using old forge backend as it is, for sd1.x,2.x and SDXL, I suggest to use forge classic by @Haoming02 instead https://github.com/Haoming02/sd-webui-forge-classic, as at the moment that is the real succesor to old forge.
 
 ### (Suggested) Clean install.
 
@@ -802,5 +803,6 @@ Usually if an old extension rework using Forge/reForge's unet patcher, 80% codes
 Some people have been asking how to donate or support the project, and I'm really grateful for that! I did this buymeacoffe link from some suggestions!
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/Panchovix)
+
 
 
