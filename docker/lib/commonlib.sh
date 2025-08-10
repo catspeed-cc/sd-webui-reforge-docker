@@ -391,8 +391,8 @@ export SAUCE_DIR=${GIT_ROOT}/docker/sauce_scripts
 export SAUCE_DL_DIR=${GIT_ROOT}/docker/sauces_dl
 export DOCKER_SAUCE_DIR=${GIT_ROOT}/docker/sauce_scripts_baked_into_docker_image
 export WORK_DIR=${GIT_ROOT}/work_dir_tmp
-export IS_CUSTOM_OR_CUTDOWN_INSTALL=$(grep "^[[:space:]]*- IS_CUSTOM_OR_CUTDOWN_INSTALL=" ./docker/compose_files/docker-compose.cpu.yaml | cut -d '=' -f2)
-export DOCKER_SERVICE_NAME=$(grep "^[[:space:]]*- DOCKER_SERVICE_NAME=" ./docker/compose_files/docker-compose.cpu.yaml | cut -d '=' -f2)
+export IS_CUSTOM_OR_CUTDOWN_INSTALL=$(grep "^[[:space:]]*- IS_CUSTOM_OR_CUTDOWN_INSTALL=" ${DOCKER_COMPOSE_DIR}/docker-compose.cpu.yaml | cut -d '=' -f2)
+export DOCKER_SERVICE_NAME=$(yq '.services | keys[0]' ${DOCKER_COMPOSE_DIR}/docker-compose.cpu.yaml`)
 
 export CUDA_TAG="default/none"
 

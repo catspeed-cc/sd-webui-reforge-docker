@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# sd-forge-menu.sh
+# sd-reforge-menu.sh
 
 # required to function correctly
 set -euo pipefail  # Exit on error, undefined var, pipe failure
@@ -35,7 +35,7 @@ find_git_root() {
 find_project_root() {
 
   export PROJECT_ROOT=""
-  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  SAUCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
   # Check if we are inside the 'docker' directory (current path contains /docker)
   if [[ "$PWD" == *"/docker" || "$PWD" == *"/docker/"* ]] && \
@@ -58,7 +58,7 @@ find_project_root() {
 
   # Nested logic: decide PROJECT_ROOT and validate everything in one flow
   if [[ -n "$GIT_ROOT" && -d "$GIT_ROOT" && -f "$GIT_ROOT/docker/lib/commonlib.sh" ]]; then
-    # Git root is valid AND points to a real SD-Forge project
+    # Git root is valid AND points to a real sd-reforge project
     export PROJECT_ROOT="$GIT_ROOT"
   else
     # No valid Git root — rely on existing PROJECT_ROOT
@@ -97,7 +97,7 @@ fi
 if [[ "$PROJECT_ROOT" = "error" || "$PROJECT_ROOT" = "error" ]]; then
   echo "❌ Failed to determine valid GIT_ROOT." >&2
   echo "❌ Failed to determine valid PROJECT_ROOT." >&2
-  echo "   Neither a Git-controlled SD-Forge repo nor valid PROJECT_ROOT found." >&2
+  echo "   Neither a Git-controlled sd-reforge repo nor valid PROJECT_ROOT found." >&2
   echo "   Consult README.md or file catspeed-cc issue ticket." >&2
   exit 1
 fi
@@ -119,15 +119,13 @@ reset
 # Navigate to the docker directory
 cd "${GIT_ROOT}/docker" || { echo "Failed to enter docker directory"; exit 1; }
 
-SCRIPT_DIR="${GIT_ROOT}/docker/sauce_scripts"
-
 REL_DOCKER_DIR="./docker/sauce_scripts"
 
 # Main menu function
 show_menu() {
     clear
     echo "===================================="
-    echo "    SD-Forge Docker Management Menu "
+    echo "    sd-reforge Docker Management Menu "
     echo "===================================="
     echo "Please refer to README.md for installation and use :)"
     echo
@@ -180,7 +178,7 @@ while true; do
             echo "Installing sauces to ~/.bashrc..."
             echo "----------------------------------------"
             ESCRIPT_NAME=docker-install-sauces.sh
-            ESCRIPT=$SCRIPT_DIR/$ESCRIPT_NAME
+            ESCRIPT=$SAUCE_DIR/$ESCRIPT_NAME
             if [[ -x "$ESCRIPT" ]]; then
               sleep 1
               "$ESCRIPT"
@@ -195,7 +193,7 @@ while true; do
             echo "Uninstalling sauces from ~/.bashrc..."
             echo "----------------------------------------"
             ESCRIPT_NAME=docker-uninstall-sauces.sh
-            ESCRIPT=$SCRIPT_DIR/$ESCRIPT_NAME
+            ESCRIPT=$SAUCE_DIR/$ESCRIPT_NAME
             if [[ -x "$ESCRIPT" ]]; then
               sleep 1
               "$ESCRIPT"
@@ -210,7 +208,7 @@ while true; do
             echo "Editing main/cpu config (req'd for all)..."
             echo "----------------------------------------"
             ESCRIPT_NAME=docker-config-cpu-only.sh
-            ESCRIPT=$SCRIPT_DIR/$ESCRIPT_NAME
+            ESCRIPT=$SAUCE_DIR/$ESCRIPT_NAME
             if [[ -x "$ESCRIPT" ]]; then
               sleep1
               "$ESCRIPT"
@@ -224,7 +222,7 @@ while true; do
             echo "Editing single gpu only config (req'd for single gpu)..."
             echo "----------------------------------------"
             ESCRIPT_NAME=docker-config-single-gpu-only.sh
-            ESCRIPT=$SCRIPT_DIR/$ESCRIPT_NAME
+            ESCRIPT=$SAUCE_DIR/$ESCRIPT_NAME
             if [[ -x "$ESCRIPT" ]]; then
               sleep1
               "$ESCRIPT"
@@ -238,7 +236,7 @@ while true; do
             echo "Editing single of multi gpu only config (req'd for single of multi gpu)..."
             echo "----------------------------------------"
             ESCRIPT_NAME=docker-config-multi-gpu-only.sh
-            ESCRIPT=$SCRIPT_DIR/$ESCRIPT_NAME
+            ESCRIPT=$SAUCE_DIR/$ESCRIPT_NAME
             if [[ -x "$ESCRIPT" ]]; then
               sleep1
               "$ESCRIPT"
@@ -252,7 +250,7 @@ while true; do
             echo "Creating cpu only container..."
             echo "----------------------------------------"
             ESCRIPT_NAME=docker-init-cpu-only.sh
-            ESCRIPT=$SCRIPT_DIR/$ESCRIPT_NAME
+            ESCRIPT=$SAUCE_DIR/$ESCRIPT_NAME
             if [[ -x "$ESCRIPT" ]]; then
               sleep1
               "$ESCRIPT"
@@ -267,7 +265,7 @@ while true; do
             echo "Creating single gpu only container..."
             echo "----------------------------------------"
             ESCRIPT_NAME=docker-init-single-gpu-only.sh
-            ESCRIPT=$SCRIPT_DIR/$ESCRIPT_NAME
+            ESCRIPT=$SAUCE_DIR/$ESCRIPT_NAME
             if [[ -x "$ESCRIPT" ]]; then
               sleep1
               "$ESCRIPT"
@@ -282,7 +280,7 @@ while true; do
             echo "Creating single of multi gpu only container..."
             echo "----------------------------------------"
             ESCRIPT_NAME=docker-init-multi-gpu-only.sh
-            ESCRIPT=$SCRIPT_DIR/$ESCRIPT_NAME
+            ESCRIPT=$SAUCE_DIR/$ESCRIPT_NAME
             if [[ -x "$ESCRIPT" ]]; then
               sleep1
               "$ESCRIPT"
@@ -297,7 +295,7 @@ while true; do
             echo "Starting container(s)..."
             echo "----------------------------------------"
             ESCRIPT_NAME=docker-start-containers.sh
-            ESCRIPT=$SCRIPT_DIR/$ESCRIPT_NAME
+            ESCRIPT=$SAUCE_DIR/$ESCRIPT_NAME
             if [[ -x "$ESCRIPT" ]]; then
               sleep1
               "$ESCRIPT"
@@ -312,7 +310,7 @@ while true; do
             echo "Stopping container(s)..."
             echo "----------------------------------------"
             ESCRIPT_NAME=docker-stop-containers.sh
-            ESCRIPT=$SCRIPT_DIR/$ESCRIPT_NAME
+            ESCRIPT=$SAUCE_DIR/$ESCRIPT_NAME
             if [[ -x "$ESCRIPT" ]]; then
               sleep1
               "$ESCRIPT"
@@ -327,7 +325,7 @@ while true; do
             echo "Reinstalling container(s) dependencies... (must be running!)"
             echo "----------------------------------------"
             ESCRIPT_NAME=docker-reinstall-container-deps.sh
-            ESCRIPT=$SCRIPT_DIR/$ESCRIPT_NAME
+            ESCRIPT=$SAUCE_DIR/$ESCRIPT_NAME
             if [[ -x "$ESCRIPT" ]]; then
               sleep1
               "$ESCRIPT"
@@ -342,7 +340,7 @@ while true; do
             echo "Tail container logs... (must be running!)"
             echo "----------------------------------------"
             ESCRIPT_NAME=docker-tail-container-logs.sh
-            ESCRIPT=$SCRIPT_DIR/$ESCRIPT_NAME
+            ESCRIPT=$SAUCE_DIR/$ESCRIPT_NAME
             if [[ -x "$ESCRIPT" ]]; then
               sleep1
               "$ESCRIPT"
@@ -356,7 +354,7 @@ while true; do
             echo "Destroying cpu only container... (must be running!)"
             echo "----------------------------------------"
             ESCRIPT_NAME=docker-destroy-cpu-only.sh
-            ESCRIPT=$SCRIPT_DIR/$ESCRIPT_NAME
+            ESCRIPT=$SAUCE_DIR/$ESCRIPT_NAME
             if [[ -x "$ESCRIPT" ]]; then
               sleep1
               "$ESCRIPT"
@@ -371,7 +369,7 @@ while true; do
             echo "Destroying single gpu only container... (must be running!)"
             echo "----------------------------------------"
             ESCRIPT_NAME=docker-destroy-single-gpu-only.sh
-            ESCRIPT=$SCRIPT_DIR/$ESCRIPT_NAME
+            ESCRIPT=$SAUCE_DIR/$ESCRIPT_NAME
             if [[ -x "$ESCRIPT" ]]; then
               sleep1
               "$ESCRIPT"
@@ -386,7 +384,7 @@ while true; do
             echo "Destroying single of multi gpu only container... (must be running!)"
             echo "----------------------------------------"
             ESCRIPT_NAME=docker-destroy-multi-gpu-only.sh
-            ESCRIPT=$SCRIPT_DIR/$ESCRIPT_NAME
+            ESCRIPT=$SAUCE_DIR/$ESCRIPT_NAME
             if [[ -x "$ESCRIPT" ]]; then
               sleep1
               "$ESCRIPT"

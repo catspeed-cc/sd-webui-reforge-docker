@@ -105,7 +105,7 @@ fi
 source ${GIT_ROOT}/docker/lib/commonlib.sh
 
 echo "Executing menu script ..."
-${GIT_ROOT}/docker/sauce_scripts/sdf-menu
+${GIT_ROOT}/docker/sauce_scripts/sdrf-menu
 
 
 
