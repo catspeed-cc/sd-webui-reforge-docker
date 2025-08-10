@@ -3,32 +3,28 @@
 services:
 
   # CONTAINER SERVICE NAME
-  sd-forge-1:
+  sd-reforge-1:
     # kept in for development, do not uncomment!
     #build: .
     # use the 'latest' image below - if this is 'bleeding' please excuse my
     # mistake and please change it back to 'latest' or a version 'v*.*.*' for now :)
-    image: catspeedcc/sd-webui-forge-docker:latest
+    image: catspeedcc/sd-webui-reforge-docker:bleeding
     # ABOVE image should be on 'latest' or a version 'v*.*.*'
     environment:
-      # # SUPER important this variable is set to the service name above (in this case sd-forge)
-      # also you can change it as long as it has "sd-forge" in the name and is unique
+      # These affect the host, not the container. Config is here for ease :)
+      #
+      # # SUPER important this variable is set to the service name above (in this case sd-reforge-1)
+      # also you can change it as long as it has "sd-reforge" in the name and is unique
       # NO spaces - use dashes
-      - DOCKER_SERVICE_NAME=sd-forge-1
+      - DOCKER_SERVICE_NAME=sd-reforge-1
       # ABOVE container service names should match
       #
-      # This affects the host, not the container.
-      # If you are not using the combined compose file _or_ a cut down install using the v1.1.1-sauces.tar.gz
+      # If you are not using the combined compose file _or_ a cut down install using the v*.*.*-sauces.tar.gz
       # Leave this the way it is.
       - IS_CUSTOM_OR_CUTDOWN_INSTALL=false
     command:
       - /app/webui-docker.sh
       - --use-cpu=all
-      # SUPER important this variable is set to the service name above (in this case sd-forge)
-      # also you can change it as long as it has "sd-forge" in the name and is unique
-      # NO spaces - use dashes
-      #- --docker-service-name=sd-forge-1
-      # ABOVE container service names should match
     ports:
       # THIS is where we limit to localhost (127.0.0.1)
       # or change 127.0.0.1->0.0.0.0 but ensure firewalls properly configured!
