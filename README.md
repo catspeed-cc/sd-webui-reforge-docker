@@ -246,17 +246,10 @@ sudo apt-get update && \
 sudo apt-get install -y cuda-toolkit-12-8
 ```
 
-## Install Docker & nano:
+## Install Requirements (all docker installations):
 - `apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin`
-- `apt install -y nano`
-- Test the installation worked with `docker compose version` you should get something like `Docker Compose version v2.24.5`
-
-Models can be put in `sd-webui-reforge-docker/models/` directory, organized by type - they will be mounted to the container
-- If you copy models in while container running and after first start, after model copy is complete you can `docker-stop-containers.sh` and `docker-start-containers.sh` and they will be loaded quickly
-
-Outputs are stored in `sd-webui-reforge-docker/outputs/` directory
-
-Due to the nature of Docker, an image running at shutdown _should_ start up again on boot. If this does not happen, submit a [catspeed-cc issue ticket](https://github.com/catspeed-cc/sd-webui-reforge-docker/issues)
+- `apt install -y htop nano yq net-tools`
+- Test the docker installation worked with `docker compose version` you should get something like `Docker Compose version v2.24.5`
 
 ## These are the current tags:
 ```
@@ -375,6 +368,15 @@ The sauces archives are basically all the docker compose files, and bash scripts
 - Due to the sauces being hosted on GitHub, MD5SUM's are not required (we are staying on the secured, confirmed, GitHub)
 - MD5SUM's will be posted inside an .MD5 file anyways as the helper script can do it automatically
 - Checking MD5SUM is not required unless you are extremely paranoid
+
+## Directories of importance
+
+Models can be put in `sd-webui-reforge-docker/models/` directory, organized by type - they will be mounted to the container
+- If you copy models in while container running and after first start, after model copy is complete you can `docker-stop-containers.sh` and `docker-start-containers.sh` and they will be loaded quickly
+
+Outputs are stored in `sd-webui-reforge-docker/outputs/` directory
+
+Due to the nature of Docker, an image running at shutdown _should_ start up again on boot. If this does not happen, submit a [catspeed-cc issue ticket](https://github.com/catspeed-cc/sd-webui-reforge-docker/issues)
 
 ## Future Plans:
 
